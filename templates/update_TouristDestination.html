@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Update Tourist Destination{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/updatecss' %}"> <!-- Link to update CSS -->
+
+<div class="container">
+    <h2>Update Tourist Destination</h2>
+    <form method="post" action="{% url 'update_destination' tourist_destination.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="place_name">Place Name:</label>
+            <input type="text" name="place_name" value="{{ tourist_destination.place_name }}" class="form-control" required>
+        </div>
+        <div class="form-group" id="image-upload-container">
+            <label for="tourist_img">Tourist Images:</label>
+            <input type="file" name="tourist_img"  multiple class="form-control">
+        </div>
+        <button type="button" id="add-image-button" class="btn btn-secondary">Add More Images</button>
+        <script>
+            document.getElementById('add-image-button').addEventListener('click', function() {
+                var container = document.getElementById('image-upload-container');
+                var newInput = document.createElement('input');
+                newInput.type = 'file';
+                newInput.name = 'Tourist_img';
+                newInput.multiple = true;
+                newInput.className = 'form-control'; // Add class for styling
+                container.appendChild(newInput);
+            });
+        </script>
+
+        <div class="form-group">
+            <label for="weather">Weather:</label>
+            <input type="text" name="weather" value="{{ tourist_destination.weather }}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="location_state">Location State:</label>
+            <input type="text" name="location_state" value="{{ tourist_destination.location_state }}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="location_district">Location District:</label>
+            <input type="text" name="location_district" value="{{ tourist_destination.location_district }}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="google_map_link">Google Map Link:</label>
+            <input type="url" name="google_map_link" value="{{ tourist_destination.google_map_link }}" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea name="description" class="form-control" required>{{ tourist_destination.description }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+{% endblock %}

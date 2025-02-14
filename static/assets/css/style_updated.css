@@ -1,0 +1,62 @@
+body {
+    font-family: var(--kerala-tourism-fonts-body);
+    color: var(--kerala-tourism-colors-russian-100);
+    background: var(--kerala-tourism-colors-chakra-body-bg);
+    transition-property: background-color, color;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+    max-width: 1200px; /* Set a max width for better layout */
+}
+
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.col {
+    flex: 0 0 30%; /* 3 columns */
+    margin-bottom: 20px;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+}
+.card:hover {
+    border: 1px solid #0dbd33;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    text-justify: center ;
+}
+
+.card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color:rgb(0, 179, 24);
+}

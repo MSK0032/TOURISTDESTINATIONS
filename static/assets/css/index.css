@@ -1,0 +1,90 @@
+/* Styles for the index page */
+.body {
+    background-color: #041421; /* Updated background color */
+}
+.container {
+    margin: 20px;
+     /* Set a max width for better layout */
+    text-align:center;
+    
+    align-items: center;
+    text-justify: center;
+    justify-content: center;
+    padding: 20px;
+}
+.row {
+    text-align:center;
+    margin-top: 15px
+    
+}
+.col-md-4 {
+    border: 1px solid #d0d6d6; 
+    border-radius: 8px; 
+    padding: 10px; 
+    margin: 10px; 
+    box-shadow: 8px 10px 12px #041421;
+    background-color: whitesmoke;
+    text-align: center;
+    box-shadow: #86b9b0;
+    
+}
+
+
+.img {
+    border: 1px solid #ccc;
+    display:inline-block;
+    border-radius: 8px;
+    justify-items: center;
+    padding: 16px;
+    text-align: center;
+
+    width: 250px;
+    box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
+ 
+}
+
+
+.pagination {
+    margin-top: 20px; /* Space above paginator */
+    align-items: center;
+    list-style-type: none;
+    text-align: center;
+}
+.nav{
+    margin:10px;
+    justify-items: center;
+    align-items: center;
+
+}
+.pageinator {
+    justify-items: center;
+    align-items: center;
+    list-style-type: none;
+}
+button {
+    width: 25%; /* Full width button */
+    padding: 10px; /* Padding for button */
+    background-color: #042630; /* Button color */
+    color: #d0d6d6; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-decoration: none;
+}
+button:hover {
+    width: 25%; /* Full width button */
+    padding: 10px; /* Padding for button */
+    background-color: #042630; /* Button color */
+    color: #042630; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 6px; /* Rounded corners */
+   
+    cursor: pointer; /* Pointer cursor on hover */
+    text-decoration: none;
+}
+button a{
+    color: white;
+    text-decoration: none;
+}
+
+

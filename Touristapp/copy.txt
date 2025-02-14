@@ -1,0 +1,643 @@
+form@@@@@
+
+from django import forms
+from .models import*
+
+class TouristDestinationForm(forms.Modelform):
+    class Meta:
+        model=TouristDestination
+        fields='__all__'
+
+
+
+model@@@@@
+from django.db import models
+
+class TouristDestination(models.Model):
+    place_name = models.CharField(max_length=255)
+    tourist_img = models.ImageField(upload_to='places/')
+    weather = models.CharField(max_length=100)
+    location_state = models.CharField(max_length=100)
+    location_district = models.CharField(max_length=100)
+    google_map_link = models.URLField()
+    description = models.TextField()
+
+    def __str__(self):
+        return self.place_name
+
+
+serial@@@@
+
+from rest_framework import serializers
+from .models import *
+
+class TouristDestinationSerializer(serializers.ModelSerializer):
+    tourist_img = serializers.ImageField(required=False)
+    class Meta:
+        model = TouristDestination
+        fields = '__all__'
+
+urls@@@@
+
+from django.urls import path
+from .views import *
+
+urlpatterns = [
+    path('create_destinations/', TouristDestinationListCreateView.as_view(), name='destination_create'),
+    path('detail_destinations/<int:pk>/', TouristDestinationDetailView.as_view(), name='destination_detail'),
+    path('update_destinations/<int:pk>/', TouristDestinationUpdateView.as_view(), name='destination_update'),
+    path('delete_destinations/<int:pk>/', TouristDestinationDeleteView.as_view(), name='destination_delete'),
+
+    path('create_TouristDestination/',create_TouristDestination,name='create_destination'),
+    path('TouristDestination_fetch/<int:id>/',TouristDestination_fetch,name='destination_fetch'),
+    path('TouristDestination_update/<int:id>/',update_TouristDestination,name='update_destination'),
+    path('TouristDestination_delete/<int:id>/',TouristDestination_delete,name='destination_delete'),
+    path('',index,name='index'),
+    path('update_detail_TouristDestination/<int:id>/',update_detail_TouristDestination,name='update_detail_destination'),
+]
+
+views@@@@@
+
+from rest_framework import generics
+from .models import TouristDestination
+from .serializers import TouristDestinationSerializer
+from rest_framework.permissions import AllowAny
+import requests
+from . forms import *
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
+
+class TouristDestinationListCreateView(generics.ListCreateAPIView):
+    queryset = TouristDestination.objects.all()
+    serializer_class = TouristDestinationSerializer
+    permission_classes = [AllowAny]
+
+class TouristDestinationDetailView(generics.RetrieveAPIView):
+    queryset = TouristDestination.objects.all()
+    serializer_class = TouristDestinationSerializer
+    permission_classes = [AllowAny]
+
+class TouristDestinationUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = TouristDestination.objects.all()
+    serializer_class = TouristDestinationSerializer
+    permission_classes = [AllowAny]
+
+class TouristDestinationDeleteView(generics.DestroyAPIView):
+    queryset = TouristDestination.objects.all()
+    serializer_class = TouristDestinationSerializer
+    permission_classes = [AllowAny]
+
+def create_TouristDestination(request):
+    if request.method == 'POST':
+        form = TouristDestination(request.POST, request.FILES)  # Corrected to use request.FILES
+        if form.is_valid():
+            try:
+                form.save()
+                api_url = 'http://127.0.0.1:8000/create_TouristDestination/'
+                data = form.cleaned_data
+                print(data)
+                response = requests.post(api_url, data=data, files={'tourist_img': request.FILES['tourist_img']})  # Corrected request method
+                if response.status_code == 201:  # Changed to check for successful creation
+                    messages.success(request, 'Recipie inserted successfully')
+                else:
+                    messages.error(request, f'Error: {response.status_code}')  # Fixed error message
+            except requests.RequestException as e:  # Fixed typo
+                messages.error(request, f'ERROR during API request: {str(e)}')  # Fixed typo
+        else:
+            messages.error(request, 'Form is invalid')
+    else:
+        form = TouristDestinationForm()
+    return render(request, 'create_TouristDestination.html', {'form': form})
+
+def update_detail_TouristDestination(request, id):
+    api_url = f'http://127.0.0.1:8000/detail_destinations/{id}'
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        data = response.json()
+        ingredients = data['Description'].split('.')
+        return render(request, 'update_TouristDestination.html', {'TouristDestination': data, 'ingredients': ingredients})
+    
+def update_TouristDestination(request, id):
+    if request.method == 'POST':
+        place_name = request.POST['place_name']
+        weather = request.POST['weather']
+        location_state = request.POST['location_state']
+        location_district = request.POST['Dlocation_district']
+        google_map_link = request.POST['google_map_link']
+        
+        print('Image_Url', request.FILES.get('tourist_img'))
+        Description = request.POST['description']
+        api_url = f'http://127.0.0.1:8000/update_destinations/{id}'
+        data = {
+            'place_name': place_name,
+            'weather': weather,
+            'location_state': location_state,
+            'location_district': location_district,
+            'google_map_link': google_map_link,
+            'Description': Description
+        }
+        files = {'tourist_img': request.FILES.get('place_name')}
+        response = requests.put(api_url, data=data, files=files)
+
+        if response.status_code == 200:
+            messages.success(request, 'Destination Updated')
+            return redirect('/')
+        else:
+            messages.error(request, f'Error submitting data to the API: {response.status_code}')
+    return redirect('update_TouristDestination .html')
+
+def index(request):
+    if request.method == 'POST':
+        search = request.POST['search']
+        api_url = f'http://127.0.0.1:8000/search_destinations/{search}'
+
+        try:
+            response = requests.get(api_url)
+            print(response.status_code)
+            
+            if response.status_code == 200:
+                data = response.json()
+            else:
+                data = None
+
+        except requests.RequestException as e:
+            data = None
+        return render(request, 'index.html', {'data': data})
+    
+    else:
+        api_url = 'http://127.0.0.1:8000/create_TouristDestination/'
+        try:
+            response = requests.get(api_url)
+
+            if response.status_code == 200:
+                data = response.json()
+                Original_data = data
+                paginator = Paginator(Original_data, 6)
+
+                try:
+                    page = int(request.GET.get('Page', 1))
+                except:
+                    page = 1
+                
+                try:
+                    TouristDestination = paginator.page(page)
+                except (EmptyPage, InvalidPage):
+                    TouristDestination = paginator.page(paginator.num_pages)
+
+                context = {
+                    'Original_data': Original_data,
+                    'TouristDestination': TouristDestination,
+                }
+
+                return render(request, 'index.html', context)
+                
+            else:
+                return render(request, 'index.html', {'error_messages': f'Error: {response.status_code}'})
+            
+        except requests.RequestException as e:
+            return render(request, 'index.html', {'error_message': f'Error: {str(e)}'})
+        
+    return render(request, 'index.html')
+
+def TouristDestination_fetch(request, id):
+    api_url = f'http://127.0.0.1:8000/detail_destination/{id}'
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        data = response.json()
+        ingredients = data['Description'].split('.')
+        return render(request, 'update_TouristDestination.html', {'TouristDestination': data, 'ingredients': ingredients})
+    return render(request, 'TouristDestination_fetch.html')
+def TouristDestination_delete(request, id):
+    api_url = f'http://127.0.0.1:8000/delete_destinations/{id}'
+    response = requests.delete(api_url)
+
+    if response.status_code == 200:
+        print(f'Item with id {id} has been deleted')
+    else:
+        print(f'Failed to delete item. Status code: {response.status_code}')
+    return redirect('/')
+
+join1@@@@@
+
+if request.method == 'POST':
+        form = TouristDestinationForm(request.POST, request.FILES)  # Corrected to use TouristDestinationForm
+        if form.is_valid():
+            destination = form.save()  # Save the destination first
+            api_url = 'http://127.0.0.1:8000/create_TouristDestination/'
+            data = form.cleaned_data
+            print(data)
+            # Iterate over multiple images
+            for img in request.FILES.getlist('tourist_img'):
+                TouristImage.objects.create(destination=destination, image=img)  # Save each image
+                response = requests.post(api_url, data=data)  # Adjusted request method
+
+                if response.status_code == 201:  # Changed to check for successful creation
+                    messages.success(request, 'Recipie inserted successfully')
+                else:
+                    messages.error(request, f'Error: {response.status_code}')
+
+
+
+@@@@@@
+
+  destination = form.save()
+                api_url = 'http://127.0.0.1:8000/create_TouristDestination/'
+                data = form.cleaned_data
+                
+                # Prepare files for the API request
+                files = []
+                for img in request.FILES.getlist('tourist_img'):
+                    files.append(('tourist_img', img))
+                    TouristImage.objects.create(destination=destination, image=img)
+
+                response = requests.post(api_url, data=data, files=files)  # Send files as a list
+
+
+@@@@@
+
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/style_updated.css' %}">
+
+
+
+@@@@@
+
+from rest_framework import generics
+from .models import TouristDestination, TouristImage
+from .serializers import TouristDestinationSerializer
+from rest_framework.permissions import AllowAny
+import requests
+from .forms import *
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
+
+class TouristDestinationListCreateView(generics.ListCreateAPIView):
+    queryset = TouristDestination.objects.all()
+    serializer_class = TouristDestinationSerializer
+    permission_classes = [AllowAny]
+
+class TouristDestinationDetailView(generics.RetrieveAPIView):
+    queryset = TouristDestination.objects.all()
+    serializer_class = TouristDestinationSerializer
+    permission_classes = [AllowAny]
+
+class TouristDestinationUpdateView(generics.RetrieveUpdateAPIView):
+    queryset = TouristDestination.objects.all()
+    serializer_class = TouristDestinationSerializer
+    permission_classes = [AllowAny]
+
+class TouristDestinationDeleteView(generics.DestroyAPIView):
+    queryset = TouristDestination.objects.all()
+    serializer_class = TouristDestinationSerializer
+    permission_classes = [AllowAny]
+
+def create_TouristDestination(request):
+    if request.method == 'POST':
+        form = TouristDestinationForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                form.save()
+                api_url = 'http://127.0.0.1:8000/create_destinations/'
+                data = form.cleaned_data
+                response = requests.post(api_url, data=data, files={'tourist_img': request.FILES['tourist_img']})
+                if response.status_code == 201:
+                    messages.success(request, 'Destination added successfully')
+                else:
+                    messages.error(request, f'Error: {response.status_code}')
+            except requests.RequestException as e:
+                messages.error(request, f'ERROR during API request: {str(e)}')
+        else:
+            messages.error(request, 'Form is invalid')
+    else:
+        form = TouristDestinationForm()
+    return render(request, 'index.html', {'form': form})
+
+def index(request):
+    if request.method == 'POST':
+        search = request.POST['search']
+        api_url = f'http://127.0.0.1:8000/search/{search}'
+        try:
+            response = requests.get(api_url)
+            if response.status_code == 200:
+                data = response.json()
+            else:
+                data = None
+        except requests.RequestException as e:
+            data = None
+        return render(request, 'index.html', {'data': data})
+    
+    else:
+        api_url = 'http://127.0.0.1:8000/create_destinations/'
+        try:
+            response = requests.get(api_url)
+            if response.status_code == 200:
+                data = response.json()
+                Original_data = data
+                paginator = Paginator(Original_data, 6)
+                page = int(request.GET.get('Page', 1))
+                TouristDestination = paginator.page(page)
+                context = {
+                    'Original_data': Original_data,
+                    'TouristDestination': TouristDestination,
+                }
+                return render(request, 'index.html', context)
+            else:
+                return render(request, 'index.html', {'error_messages': f'Error: {response.status_code}'})
+        except requests.RequestException as e:
+                messages.error(request, f'ERROR during API request: {str(e)}')
+        else:
+            messages.error(request, 'Form is invalid')
+    else:
+        form = TouristDestinationForm()
+    return render(request, 'create_TouristDestination.html', {'form': form})
+
+    if request.method == 'POST':
+        form = TouristDestinationForm(request.POST, request.FILES)  # Corrected to use request.FILES
+        if form.is_valid():
+            try:
+                form.save()
+                api_url = 'http://127.0.0.1:8000/create_destinations/'
+                data = form.cleaned_data
+                print(data)
+                response = requests.post(api_url, data=data, files={'tourist_img': request.FILES['tourist_img']})  # Corrected request method
+                if response.status_code == 201:  # Changed to check for successful creation
+                    messages.success(request, 'Destination added successfully')
+                else:
+                    messages.error(request, f'Error: {response.status_code}')  # Fixed error message
+            except requests.RequestException as e:  # Fixed typo
+                messages.error(request, f'ERROR during API request: {str(e)}')  # Fixed typo
+        else:
+            messages.error(request, 'Form is invalid')
+    else:
+        form =TouristDestinationForm()
+    return render(request, 'index.html', {'form': form})
+
+def create_TouristDestination2(request):
+    if request.method == 'POST':
+        form = TouristDestinationForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                destination = form.save()
+                api_url = 'http://127.0.0.1:8000/create_TouristDestination/'
+                data = form.cleaned_data
+                
+                # Prepare files for the API request
+                files = []
+                for img in request.FILES.getlist('tourist_img'):
+                    files.append(('tourist_img', img))
+                    TouristImage.objects.create(destination=destination, image=img)
+
+                response = requests.post(api_url, data=data, files=files)  # Send files as a list
+
+                if response.status_code == 201:
+                    messages.success(request, 'Destination inserted successfully')
+                else:
+                    messages.error(request, f'Error: {response.status_code}')
+            except requests.RequestException as e:
+                messages.error(request, f'ERROR during API request: {str(e)}')
+        else:
+            messages.error(request, 'Form is invalid')
+    else:
+        form = TouristDestinationForm()
+    return render(request, 'create_TouristDestination.html', {'form': form})
+
+
+def update_detail_TouristDestination2(request, id):
+    api_url = 'http://127.0.0.1:8000/detail_destinations/{id}'
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        data = response.json()
+        ingredients = data['Description'].split('.')
+        return render(request, 'update_TouristDestination.html', {'TouristDestination': data, 'ingredients': ingredients})
+
+def update_detail_TouristDestination(request, id):
+    api_url = 'http://127.0.0.1:8000/detail_destinations/{id}'
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        data = response.json()
+        ingredients = data['description'].split('.')
+        return render(request, 'touristdestination_update.html', {'TouristDestination': data, 'ingredients': ingredients})
+
+
+def update_TouristDestination2(request, id):
+    if request.method == 'POST':
+        destination = TouristDestination.objects.get(id=id)  # Get the existing destination
+        form = TouristDestinationForm(request.POST, request.FILES, instance=destination)  # Bind the form to the instance
+        if form.is_valid():
+            form.save()  # Save the updated destination
+            api_url = f'http://127.0.0.1:8000/update_destinations/{id}'
+            # Iterate over multiple images
+            for img in request.FILES.getlist('tourist_img'):
+                TouristImage.objects.create(destination=destination, image=img)  # Save each image
+            response = requests.put(api_url, data=form.cleaned_data)  # Adjusted request method
+
+        if response.status_code == 200:
+            messages.success(request, 'Destination Updated')
+            return redirect('/')
+        else:
+            messages.error(request, f'Error submitting data to the API: {response.status_code}')
+    return redirect('update_TouristDestination .html')
+
+def update_TouristDestination(request, id):
+    if request.method == 'POST':
+        place_name = request.POST['place_name']
+        tourist_image = request.POST['tourist_image']
+        weather = request.POST['weather']
+        location_state = request.POST['location_state']
+        location_district = request.POST['location_district']
+        google_map_link = request.POST['google_map_link']
+        description = request.POST['description']
+        api_url = 'http://127.0.0.1:8000/update_destinations/{id}'
+        data = {
+            'place_name': place_name,
+            'tourist_image': tourist_image,
+            'weather': weather,
+            'location_state': location_state,
+            'location_district': location_district,
+            'google_map_link': google_map_link,
+            'description': description
+        }
+        files = {'Tourist_img': request.FILES.get('Tourist_img')}
+        response = requests.put(api_url, data=data, files=files)
+
+        if response.status_code == 200:
+            messages.success(request, 'Destination Updated')
+            return redirect('/')
+        else:
+            messages.error(request, f'Error submitting data to the API: {response.status_code}')
+    return redirect('update_TouristDestination.html')
+
+    if request.method == 'POST':
+        place_name = request.POST['place_name']
+        tourist_image = request.POST['tourist_image']
+        weather = request.POST['weather']
+        location_state = request.POST['location_state']
+        location_district = request.POST['location_district']
+        google_map_link = request.POST['google_map_link']
+        description = request.POST['description']
+        api_url = 'http://127.0.0.1:8000/update_destinations/{id}'
+        data = {
+            'place_name': place_name,
+            'tourist_image': tourist_image,
+            'weather': weather,
+            'location_state': location_state,
+            'location_district': location_district,
+            'google_map_link': google_map_link,
+            'description': description
+        }
+        files = {'Tourist_img': request.FILES.get('Tourist_img')}
+        response = requests.put(api_url, data=data, files=files)
+
+        if response.status_code == 200:
+            messages.success(request, 'Destination Updated')
+            return redirect('/')
+        else:
+            messages.error(request, f'Error submitting data to the API: {response.status_code}')
+    return redirect('update_TouristDestination.html')
+
+
+def index2(request):
+    if request.method == 'POST':
+        search = request.POST['search']
+        api_url = f'http://127.0.0.1:8000/search_destinations/{search}'
+
+        try:
+            response = requests.get(api_url)
+            print(response.status_code)
+            
+            if response.status_code == 200:
+                data = response.json()
+            else:
+                data = None
+
+        except requests.RequestException as e:
+            data = None
+        return render(request, 'index.html', {'data': data})
+    
+    else:
+        api_url = 'http://127.0.0.1:8000/create_TouristDestination/'
+        try:
+            response = requests.get(api_url)
+
+            if response.status_code == 200:
+                data = response.json()
+                Original_data = data
+                paginator = Paginator(Original_data, 6)
+
+                try:
+                    page = int(request.GET.get('Page', 1))
+                except:
+                    page = 1
+                
+                try:
+                    TouristDestination = paginator.page(page)
+                except (EmptyPage, InvalidPage):
+                    TouristDestination = paginator.page(paginator.num_pages)
+
+                context = {
+                    'Original_data': Original_data,
+                    'TouristDestination': TouristDestination,
+                }
+
+                return render(request, 'index.html', context)
+                
+            else:
+                return render(request, 'index.html', {'error_messages': f'Error: {response.status_code}'})
+            
+        except requests.RequestException as e:
+            return render(request, 'index.html', {'error_message': f'Error: {str(e)}'})
+        
+    return render(request, 'index.html')
+
+def index(request):
+    if request.method == 'POST':
+        search = request.POST['search']
+        api_url = f'http://127.0.0.1:8000/search/{search}'
+
+        try:
+            response = requests.get(api_url)
+            print(response.status_code)
+            
+            if response.status_code == 200:
+                data = response.json()
+            else:
+                data = None
+
+        except requests.RequestException as e:
+            data = None
+        return render(request, 'index.html', {'data': data})
+    
+    else:
+        api_url = 'http://127.0.0.1:8000/create_destinations/'
+        try:
+            response = requests.get(api_url)
+
+            if response.status_code == 200:
+                data = response.json()
+                Original_data = data
+                paginator = Paginator(Original_data, 6)
+
+                try:
+                    page = int(request.GET.get('Page', 1))
+                except:
+                    page = 1
+                
+                try:
+                    TouristDestination = paginator.page(page)
+                except (EmptyPage, InvalidPage):
+                    TouristDestination = paginator.page(paginator.num_pages)
+
+                context = {
+                    'Original_data': Original_data,
+                    'TouristDestination': TouristDestination, 
+                }
+
+                return render(request, 'index.html', context)
+                
+            else:
+                return render(request, 'index.html', {'error_messages': f'Error: {response.status_code}'})
+            
+        except requests.RequestException as e:
+            return render(request, 'index.html', {'error_message': f'Error: {str(e)}'})
+        
+    return render(request, 'index.html')
+
+
+def TouristDestination_fetch2(request, id):
+    api_url = f'http://127.0.0.1:8000/detail_destination/{id}'
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        data = response.json()
+        ingredients = data['Description'].split('.')
+        return render(request, 'update_TouristDestination.html', {'TouristDestination': data, 'ingredients': ingredients})
+    return render(request, 'TouristDestination_fetch.html')
+
+def TouristDestination_fetch(request, id):
+    api_url = f'http://127.0.0.1:8000/detail_destinations/{id}'
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        data = response.json()
+        ingredients = data
+        return render(request, 'detail_TouristDestination.html', {'TouristDestination': data, 'ingredients': ingredients})
+    return render(request, 'detail_TouristDestination.html')
+
+def TouristDestination_delete2(request, id):
+    api_url = f'http://127.0.0.1:8000/delete_destinations/{id}'
+    response = requests.delete(api_url)
+
+    if response.status_code == 200:
+        print(f'Item with id {id} has been deleted')
+    else:
+        print(f'Failed to delete item. Status code: {response.status_code}')
+    return redirect('/')
+
+def TouristDestination_delete(request, id):
+    api_url = f'http://127.0.0.1:8000/delete_destinations/{id}'
+    response = requests.delete(api_url)
+
+    if response.status_code == 200:
+        print(f'Item with id {id} has been deleted')
+    else:
+        print(f'Failed to delete item. Status code: {response.status_code}')
+    return redirect('/')

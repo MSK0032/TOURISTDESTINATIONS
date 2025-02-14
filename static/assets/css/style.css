@@ -1,0 +1,36 @@
+body {
+    font-family: var(--kerala-tourism-fonts-body);
+    color: var(--kerala-tourism-colors-russian-100);
+    background: var(--kerala-tourism-colors-chakra-body-bg);
+    transition-property: background-color, color;
+}
+
+.navbar {
+    background-color: #007bff; /* Navbar background color */
+    padding: 15px; /* Padding for the navbar */
+}
+
+.navbar a {
+    color: white; /* Text color for links */
+    text-decoration: none; /* Remove underline from links */
+    padding: 10px 15px; /* Padding for links */
+    display: inline-block; /* Display links inline */
+}
+
+.navbar a:hover {
+    background-color: #0056b3; /* Darker background on hover */
+    border-radius: 5px; /* Rounded corners on hover */
+}
+
+
+.container {
+    width: 90%;
+    margin: auto;
+    max-width: 1200px; /* Set a max width for better layout */
+    align-items: center;
+}
+
+
+.btn:hover {
+    background-color: #0fb300;
+}

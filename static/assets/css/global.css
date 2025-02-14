@@ -1,0 +1,99 @@
+.main {
+    background-color: #041421;
+}
+header {
+    background-color: #86b9b0; /* Bootstrap primary color */
+    color: #041421;
+    padding: 20px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    align-content: center; /* Center header content */
+    height: 50px;
+    width: auto;
+    border-radius: 5px;
+
+}
+
+header h1 {
+    margin-right:350px;
+    align-items: right;
+}
+
+nav {
+    margin: 0;
+    align-items: center;
+    list-style-type: none;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 10px;
+    display: flex; /* Changed to flex for centering */
+    align-items: center; /* Center navbar items */
+    text-decoration: none;
+}
+
+nav ul a {
+    display: inline;
+    list-style-type:none;
+    padding: 0;
+    text-decoration: none;
+    text-align: center;
+    align-items: center;
+    margin-left: 15px;
+    font-family: Arial, sans-serif;
+    font-size: larger;
+    font-weight: bolder;
+    color: #041421;
+    justify-items: center;
+    
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #86b9b0; /* Bootstrap primary color */
+    color: #041421;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top:15px;
+}
+
+.form-group {
+    /* Space between form groups */
+    align-items: end;
+    text-align: right;
+}
+
+label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space between label and input */
+    font-weight: bold; /* Bold labels */
+}
+
+.search[type="text"] {
+    
+   
+    width: 75%; /* Full width inputs */
+    margin: 5px auto; /* Center input */
+    padding: 10px; /* Padding inside inputs */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 4px; /* Rounded corners */
+    text-align: right;
+}
+
+.searchbutton {
+    position: relative;
+    width: 15%; /* Full width inputs */
+    margin-top: 5px;
+    align-items: center;
+    margin-left: 30px; /* Center button */
+    padding: 15px; /* Padding for button */
+    background-color: #007bff; /* Button color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}

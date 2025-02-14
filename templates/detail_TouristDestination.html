@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tourist Destination Details{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/' %}">
+
+<div class="row">
+    <div class="col-sm">
+    
+    
+        <img src="{{ TouristDestination.tourist_img.url }}" alt="{{ TouristDestination.place_name }}" style="width: 100%; height: auto;">
+        
+       
+    </div>
+    <div class="col-md">
+        <h2>{{ TouristDestination.place_name }}</h2>
+        <p><strong>Weather:</strong> {{ TouristDestination.weather }}</p>
+        <p><strong>State:</strong> {{ TouristDestination.location_state }}</p>
+        <p><strong>Location:</strong> {{ TouristDestination.location_district }}</p>
+        <p><strong>Google Map Link:</strong> <a href="{{ TouristDestination.google_map_link }}" target="_blank">View on Google Maps</a></p>
+        <p><strong>Description:</strong> {{ TouristDestination.description|linebreaks }}</p>
+        
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'update_destination' TouristDestination.id %}" class="btn btn-primary me-2">Update</a>
+            <a href="{% url 'destination_delete' TouristDestination.id %}" class="btn btn-danger me-2">Delete</a>
+            <a href="{% url 'index' %}" class="btn btn-secondary">Home</a>
+        </div>
+    </div>
+</div>
+<h3>Related Images</h3>
+<div class="row">
+    {% for image in images %}
+        <div class="col-md">
+            <img src="{{ image.Tourist_img.url }}" alt="Image" class="img-fluid" style="width: 100%; height: auto;">
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Tourist Destination{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/update.css' %}"> <!-- Link to create CSS -->
+
+<div>
+    <h2>Create New Tourist Destination</h2>
+    <style>
+        body {
+            background-color: #f0f0f0; /* Light grey background for the page */
+        }
+    </style>
+
+    <form method="post" action="{% url 'create_destination' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="place_name">Place Name:</label>
+            <input type="text" name="place_name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="tourist_img">Tourist Image:</label>
+            <input type="file" name="tourist_img" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="weather">Weather:</label>
+            <input type="text" name="weather" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="location_state">Location State:</label>
+            <input type="text" name="location_state" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="location_district">Location District:</label>
+            <input type="text" name="location_district" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="google_map_link">Google Map Link:</label>
+            <input type="url" name="google_map_link" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea name="description" class="form-control" required></textarea>
+        </div>
+       
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+    <a href="{% url 'index' %}" class="btn btn-secondary">Home</a>
+</div>
+{% endblock %}

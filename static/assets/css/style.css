@@ -18,19 +18,29 @@ body {
 }
 
 .navbar a:hover {
-    background-color: #0056b3; /* Darker background on hover */
+    background-color:rgb(133, 185, 240); /* Darker background on hover */
     border-radius: 5px; /* Rounded corners on hover */
 }
 
 
 .container {
-    width: 90%;
+    width: 100%;
     margin: auto;
-    max-width: 1200px; /* Set a max width for better layout */
+    max-width: 1500px; /* Set a max width for better layout */
     align-items: center;
 }
 
 
 .btn:hover {
     background-color: #0fb300;
+}
+.footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #86b9b0; /* Bootstrap primary color */
+    color: #041421;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top:15px;
 }

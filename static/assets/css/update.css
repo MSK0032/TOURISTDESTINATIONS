@@ -34,7 +34,7 @@ input[type="file"] {
 button {
     width: 100%; /* Full width button */
     padding: 10px; /* Padding for button */
-    background-color: #007bff; /* Button color */
+    background-color: #041421;/* Button color */
     color: white; /* Text color */
     border: none; /* Remove border */
     border-radius: 4px; /* Rounded corners */
@@ -42,10 +42,21 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3; /* Darker button color on hover */
+    background-color: #86b9b0; /* Darker button color on hover */
+    color: #041421;
+    
 }
 .container {
     margin-top: 20px;
     max-width: 1200px; /* Set a max width for better layout */
     
+}footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #86b9b0; /* Bootstrap primary color */
+    color: #041421;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top:15px;
 }

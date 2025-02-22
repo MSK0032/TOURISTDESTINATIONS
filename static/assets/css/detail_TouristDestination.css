@@ -57,3 +57,13 @@ button a{
     color: white;
     text-decoration: none;
 }
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #86b9b0; /* Bootstrap primary color */
+    color: #041421;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top:15px;
+}

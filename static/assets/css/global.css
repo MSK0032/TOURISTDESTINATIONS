@@ -64,7 +64,7 @@ footer {
 .form-group {
     /* Space between form groups */
     align-items: end;
-    text-align: right;
+    text-align: left;
 }
 
 label {
@@ -91,8 +91,47 @@ label {
     align-items: center;
     margin-left: 30px; /* Center button */
     padding: 15px; /* Padding for button */
-    background-color: #007bff; /* Button color */
+    background-color: #041421; /* Button color */
     color: white; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+.searchbutton:hover {
+    position: relative;
+    width: 15%; /* Full width inputs */
+    margin-top: 5px;
+    align-items: center;
+    margin-left: 30px; /* Center button */
+    padding: 15px; /* Padding for button */
+    background-color: #86b9b0; /* Button color */
+    color: #041421; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+.button {
+    position: relative;
+    width: 15%; /* Full width inputs */
+    margin-top: 5px;
+    align-items: center;
+    margin-left: 30px; /* Center button */
+    padding: 15px; /* Padding for button */
+    background-color: #041421; /* Button color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+.button:hover {
+    position: relative;
+    width: 15%; /* Full width inputs */
+    margin-top: 5px;
+    align-items: center;
+    margin-left: 30px; /* Center button */
+    padding: 15px; /* Padding for button */
+    background-color: #86b9b0; /* Button color */
+    color: #041421; /* Text color */
     border: none; /* Remove border */
     border-radius: 4px; /* Rounded corners */
     cursor: pointer; /* Pointer cursor on hover */

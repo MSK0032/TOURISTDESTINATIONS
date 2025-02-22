@@ -1,0 +1,95 @@
+/* Styles for the registration page */
+body {
+    background-color: #f8f9fa; /* Light background for better contrast */
+}
+
+.container {
+    margin-top: 50px; /* Space above the container */
+}
+
+.card {
+    border: none; /* Remove default border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 2px 8px 12px #042630; /* Subtle shadow */
+}
+
+.card:hover {
+    border: none; /* Remove default border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 12px 12px 12px 12px #042630; /* Subtle shadow */
+}
+
+.card-header {
+    background-color: #daeaf7; /* Bootstrap primary color */
+    color: #041421; /* White text for contrast */
+    border-top-left-radius: 10px; /* Rounded corners */
+    border-top-right-radius: 10px; /* Rounded corners */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"]{
+    width: 100%; /* Full width inputs */
+    padding: 10px; /* Padding inside inputs */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 2px 8px 12px #042630;
+}
+
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover{
+    width: 100%; /* Full width inputs */
+    padding: 10px; /* Padding inside inputs */
+    border: none ; /* Border for inputs */
+    border-radius: 6px; /* Rounded corners */
+    border-color: #041421;
+    box-shadow: 12px 8px 12px #042630;
+    
+}
+
+
+.btn-primary {
+    background-color: #537692; /* Bootstrap primary color */
+    border: none; /* Remove border */
+    box-shadow: 2px 8px 12px #042630;
+    
+}
+
+.btn-primary:hover {
+    background-color: #4c7273; /* Darker shade on hover */
+    box-shadow: 12px 8px 12px #042630;
+}
+.btn-warning {
+    background-color: #4c7273; /* Bootstrap primary color */
+    border: none; /* Remove border */
+    box-shadow: 2px 8px 12px #042630;
+    color:white;
+    
+}
+
+.btn-warning:hover {
+    background-color: #537692; /* Darker shade on hover */
+    box-shadow: 12px 8px 12px #042630;
+    color:white;
+    
+}
+
+.text-center a {
+    color: #007bff; /* Link color */
+}
+
+.text-center a:hover {
+    text-decoration: none; /* Underline on hover */
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #86b9b0; /* Bootstrap primary color */
+    color: #041421;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top:15px;
+}

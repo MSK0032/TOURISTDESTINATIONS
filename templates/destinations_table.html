@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tourist Destinations Table{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/global.css' %}">
+
+<div class="container mt-4">
+    <h2>Tourist Destinations</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Place Name</th>
+                    <th>Weather</th>
+                    <th>State</th>
+                    <th>District</th>
+                    <th>Map Link</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for destination in destinations %}
+                <tr>
+                    <td>{{ destination.place_name }}</td>
+                    <td>{{ destination.weather }}</td>
+                    <td>{{ destination.location_state }}</td>
+                    <td>{{ destination.location_district }}</td>
+                    <td>
+                        <a href="{{ destination.google_map_link }}" target="_blank">
+                            View Map
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'fetch_destination' destination.id %}" class="btn btn-sm btn-info">View</a>
+                        <a href="{% url 'update_destination' destination.id %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'destination_delete' destination.id %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+
+{% endblock %}
